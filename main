@@ -1,0 +1,67 @@
+//Autore: Samuele
+//Titolo: Indovina il Numero con i Led
+//Data: 8 aprile 24
+//Versione: 1
+
+
+
+int pinLed[] = {2,3,4,5};
+
+int pinPulsanti[] = {7,8,9,10};       
+
+int bazzer = 12;                            //inizializzo i pin dei led, dei pulsanti e del bazzer
+
+int rnd;                                    //inizializzo una variabile che verrà usata per generare un numero randomico nel loop
+
+int num;                                     //variabile per salvare un dato
+
+
+void setup() {
+    for(int i = 0; i < 4; i++){
+        pinMode(pinLed[i], OUTPUT);
+        pinMode(pinPulsanti[i], INPUT);     //dichiaro otuput i pin per i led e input quelli per il pulsante        
+    }
+
+    pinMode(bazzer, OUTPUT);                //dichiaro otuput IL PIN PER IL BAZZER
+    Serial.begin(9600);
+}
+
+void loop(){
+    
+    randomSeed(millis());
+    rnd = random(0,4);                      //numero randomico da 0 a 3
+    for(int i = 0; i < 4; i++){
+        digitalWrite(pinLed[i], LOW);
+    }
+    for(int i = 0; i < 4; i++){
+        if(digitalRead(pinPulsanti[i]) == HIGH){
+            num = i;
+        }
+    }
+    if(num != 100){
+        if(num == rnd){
+            giusto();
+            digitalWrite(pinLed[num], HIGH);        
+        }
+    }else{
+            sbagliato();
+            digitalWrite(pinLed[num], HIGH);
+        }
+    delay(2500);                            //aspetto 2 secondi e mezzo per far ripartire il loop
+}
+
+
+
+
+
+void giusto() {                             //funzioni per le tonalità del buzzer
+    tone(bazzer, 261);
+    delay(1000);
+    noTone(bazzer);
+}
+
+void sbagliato() {
+    tone(bazzer, 440);
+    delay(1000);
+    noTone(bazzer);
+}
